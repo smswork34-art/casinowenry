@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucky Duck Casino</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script type="module" src="supabase/client.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Левый сайдбар -->
+        <aside class="sidebar">
+            <div class="logo">Crash</div>
+            <nav class="menu">
+                <ul>
+                    <li><a href="crash.html" class="active">Crash</a></li>
+                    <li><a href="#">Pinko</a></li>
+                    <li><a href="#">Miner</a></li>
+                    <li><a href="#">Cookies</a></li>
+                    <li><a href="#">Nuts</a></li>
+                    <li><a href="#">Keno</a></li>
+                    <li><a href="#">Coinflip</a></li>
+                    <li><a href="#">Бонусы</a></li>
+                    <li><a href="#">Партнерка</a></li>
+                    <li><a href="#">Помощь</a></li>
+                    <li><a href="#">Поддержка</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Основной контент -->
+        <main class="main">
+            <!-- Верхняя панель -->
+            <header class="top-bar">
+                <div class="user-info">
+                    <span class="username">Lucky Duck</span>
+                    <div class="balance">
+                        Баланс: <span id="balance">0 ₽</span>
+                    </div>
+                </div>
+                <div class="auth-buttons">
+                    <button class="btn-login">Вход</button>
+                    <button class="btn-register">Регистрация</button>
+                </div>
+            </header>
+
+            <!-- Игровые разделы -->
+            <div class="games-grid">
+                <a href="crash.html" class="game-card">
+                    <div class="game-icon">🚀</div>
+                    <h3>Crash</h3>
+                    <p>Игра на множитель</p>
+                </a>
+                <a href="#" class="game-card">
+                    <div class="game-icon">🎯</div>
+                    <h3>Pinko</h3>
+                    <p>Падающие шары</p>
+                </a>
+                <a href="#" class="game-card">
+                    <div class="game-icon">⛏️</div>
+                    <h3>Miner</h3>
+                    <p>Добыча крипты</p>
+                </a>
+                <a href="#" class="game-card">
+                    <div class="game-icon">🍪</div>
+                    <h3>Cookies</h3>
+                    <p>Кликер-игра</p>
+                </a>
+                <a href="#" class="game-card">
+                    <div class="game-icon">🥜</div>
+                    <h3>Nuts</h3>
+                    <p>Азартная игра</p>
+                </a>
+                <a href="#" class="game-card">
+                    <div class="game-icon">🎲</div>
+                    <h3>Keno</h3>
+                    <p>Лотерея</p>
+                </a>
+                <a href="#" class="game-card">
+                    <div class="game-icon">🪙</div>
+                    <h3>Coinflip</h3>
+                    <p>Орёл или решка</p>
+                </a>
+            </div>
+
+            <!-- Кнопка пополнения -->
+            <div class="deposit-section">
+                <button id="deposit-btn" class="btn-deposit">💳 Пополнить через СБП</button>
+            </div>
+
+            <!-- Последние ставки (статичный пример) -->
+            <div class="recent-bets">
+                <h4>Последние ставки</h4>
+                <ul id="recent-bets-list">
+                    <li>Игрок1: 100 ₽ → x2.5</li>
+                    <li>Игрок2: 50 ₽ → x1.8</li>
+                    <li>Игрок3: 200 ₽ → x10.2</li>
+                </ul>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Инициализация Telegram WebApp
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+        tg.enableClosingConfirmation();
+
+        // Загрузка баланса пользователя
+        async function loadBalance() {
+            // TODO: Запрос к Supabase для получения баланса
+            const user = await supabase.getUser();
+            if (user) {
+                document.getElementById('balance').textContent = user.balance + ' ₽';
+            }
+        }
+
+        // Переход на пополнение
+        document.getElementById('deposit-btn').addEventListener('click', () => {
+            window.location.href = 'payment.html';
+        });
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', () => {
+            loadBalance();
+        });
+    </script>
+</body>
+</html>
