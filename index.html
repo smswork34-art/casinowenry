@@ -3,129 +3,846 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lucky Duck Casino</title>
-    <link rel="stylesheet" href="style.css">
+    <title>WENRY CASINO</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-    <script type="module" src="supabase/client.js"></script>
-</head>
-<body>
-    <div class="container">
-        <!-- Левый сайдбар -->
-        <aside class="sidebar">
-            <div class="logo">Crash</div>
-            <nav class="menu">
-                <ul>
-                    <li><a href="crash.html" class="active">Crash</a></li>
-                    <li><a href="#">Pinko</a></li>
-                    <li><a href="#">Miner</a></li>
-                    <li><a href="#">Cookies</a></li>
-                    <li><a href="#">Nuts</a></li>
-                    <li><a href="#">Keno</a></li>
-                    <li><a href="#">Coinflip</a></li>
-                    <li><a href="#">Бонусы</a></li>
-                    <li><a href="#">Партнерка</a></li>
-                    <li><a href="#">Помощь</a></li>
-                    <li><a href="#">Поддержка</a></li>
-                </ul>
-            </nav>
-        </aside>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #8B5CF6;
+            --primary-dark: #7C3AED;
+            --secondary: #10B981;
+            --accent: #F59E0B;
+            --danger: #EF4444;
+            --background: #0F172A;
+            --surface: #1E293B;
+            --surface-light: rgba(255, 255, 255, 0.05);
+            --text: #F1F5F9;
+            --text-secondary: #94A3B8;
+            --glass: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --gradient: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 50%, #10B981 100%);
+            --gradient-accent: linear-gradient(135deg, #F59E0B 0%, #EF4444 100%);
+        }
 
-        <!-- Основной контент -->
-        <main class="main">
-            <!-- Верхняя панель -->
-            <header class="top-bar">
-                <div class="user-info">
-                    <span class="username">Lucky Duck</span>
-                    <div class="balance">
-                        Баланс: <span id="balance">0 ₽</span>
-                    </div>
-                </div>
-                <div class="auth-buttons">
-                    <button class="btn-login">Вход</button>
-                    <button class="btn-register">Регистрация</button>
-                </div>
-            </header>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
 
-            <!-- Игровые разделы -->
-            <div class="games-grid">
-                <a href="crash.html" class="game-card">
-                    <div class="game-icon">🚀</div>
-                    <h3>Crash</h3>
-                    <p>Игра на множитель</p>
-                </a>
-                <a href="#" class="game-card">
-                    <div class="game-icon">🎯</div>
-                    <h3>Pinko</h3>
-                    <p>Падающие шары</p>
-                </a>
-                <a href="#" class="game-card">
-                    <div class="game-icon">⛏️</div>
-                    <h3>Miner</h3>
-                    <p>Добыча крипты</p>
-                </a>
-                <a href="#" class="game-card">
-                    <div class="game-icon">🍪</div>
-                    <h3>Cookies</h3>
-                    <p>Кликер-игра</p>
-                </a>
-                <a href="#" class="game-card">
-                    <div class="game-icon">🥜</div>
-                    <h3>Nuts</h3>
-                    <p>Азартная игра</p>
-                </a>
-                <a href="#" class="game-card">
-                    <div class="game-icon">🎲</div>
-                    <h3>Keno</h3>
-                    <p>Лотерея</p>
-                </a>
-                <a href="#" class="game-card">
-                    <div class="game-icon">🪙</div>
-                    <h3>Coinflip</h3>
-                    <p>Орёл или решка</p>
-                </a>
-            </div>
+        body {
+            background: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
 
-            <!-- Кнопка пополнения -->
-            <div class="deposit-section">
-                <button id="deposit-btn" class="btn-deposit">💳 Пополнить через СБП</button>
-            </div>
+        /* Анимированный фон */
+        .background-effects {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
 
-            <!-- Последние ставки (статичный пример) -->
-            <div class="recent-bets">
-                <h4>Последние ставки</h4>
-                <ul id="recent-bets-list">
-                    <li>Игрок1: 100 ₽ → x2.5</li>
-                    <li>Игрок2: 50 ₽ → x1.8</li>
-                    <li>Игрок3: 200 ₽ → x10.2</li>
-                </ul>
-            </div>
-        </main>
-    </div>
+        .gradient-orb {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+            opacity: 0.15;
+            filter: blur(60px);
+            animation: float 20s infinite ease-in-out;
+        }
 
-    <script>
-        // Инициализация Telegram WebApp
-        const tg = window.Telegram.WebApp;
-        tg.expand();
-        tg.enableClosingConfirmation();
+        .gradient-orb:nth-child(1) {
+            top: -200px;
+            left: -200px;
+            background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+            animation-delay: 0s;
+        }
 
-        // Загрузка баланса пользователя
-        async function loadBalance() {
-            // TODO: Запрос к Supabase для получения баланса
-            const user = await supabase.getUser();
-            if (user) {
-                document.getElementById('balance').textContent = user.balance + ' ₽';
+        .gradient-orb:nth-child(2) {
+            bottom: -200px;
+            right: -200px;
+            background: radial-gradient(circle, var(--secondary) 0%, transparent 70%);
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(100px, -50px) scale(1.1); }
+            66% { transform: translate(-50px, 100px) scale(0.9); }
+        }
+
+        /* Главный контейнер */
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Верхняя панель */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 28px;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-icon {
+            font-size: 32px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .balance-card {
+            background: var(--surface);
+            padding: 12px 24px;
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+
+        .balance-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+        }
+
+        .balance-amount {
+            font-size: 22px;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .balance-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .btn-deposit {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .btn-deposit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+        }
+
+        /* Основной контент */
+        .main-content {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 30px;
+            min-height: 80vh;
+        }
+
+        /* Сайдбар */
+        .sidebar {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            padding: 24px;
+            height: fit-content;
+            box-shadow: var(--shadow);
+        }
+
+        .nav-section {
+            margin-bottom: 32px;
+        }
+
+        .nav-title {
+            color: var(--text-secondary);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+            padding-left: 12px;
+        }
+
+        .nav-list {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            color: var(--text);
+            text-decoration: none;
+            border-radius: 14px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link:hover {
+            background: var(--surface-light);
+            transform: translateX(5px);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(90deg, rgba(139, 92, 246, 0.2), transparent);
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+        }
+
+        .nav-icon {
+            width: 24px;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        /* Игровая сетка */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .game-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            padding: 24px;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: 0.5s;
+        }
+
+        .game-card:hover::before {
+            left: 100%;
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .game-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        .game-tag {
+            background: var(--gradient-accent);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .game-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .game-description {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .game-stats {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        /* Live секция */
+        .live-section {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(139, 92, 246, 0.1));
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 40px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .live-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--danger);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .live-pulse {
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        .live-games {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+
+        .live-game {
+            min-width: 200px;
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 16px;
+            transition: all 0.3s;
+        }
+
+        .live-game:hover {
+            transform: translateY(-4px);
+            background: var(--surface-light);
+        }
+
+        .live-multiplier {
+            font-size: 32px;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        /* Bottom Bar */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--glass-border);
+            padding: 16px;
+            display: none;
+            justify-content: space-around;
+            z-index: 1000;
+        }
+
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .bottom-nav-item.active {
+            color: var(--primary);
+        }
+
+        /* Адаптивность */
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+            
+            .bottom-bar {
+                display: flex;
             }
         }
 
-        // Переход на пополнение
-        document.getElementById('deposit-btn').addEventListener('click', () => {
-            window.location.href = 'payment.html';
-        });
+        @media (max-width: 768px) {
+            .top-nav {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .user-info {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .balance-card {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+        }
 
-        // Инициализация
+        /* Анимации */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; opacity: 0; }
+        .delay-2 { animation-delay: 0.2s; opacity: 0; }
+        .delay-3 { animation-delay: 0.3s; opacity: 0; }
+        .delay-4 { animation-delay: 0.4s; opacity: 0; }
+        .delay-5 { animation-delay: 0.5s; opacity: 0; }
+    </style>
+</head>
+<body>
+    <!-- Анимированный фон -->
+    <div class="background-effects">
+        <div class="gradient-orb"></div>
+        <div class="gradient-orb"></div>
+    </div>
+
+    <div class="app-container">
+        <!-- Верхняя панель -->
+        <nav class="top-nav fade-in">
+            <div class="logo">
+                <div class="logo-icon">🎰</div>
+                <span>WENRY CASINO</span>
+            </div>
+            
+            <div class="user-info">
+                <div class="balance-card">
+                    <i class="fas fa-wallet"></i>
+                    <div>
+                        <div class="balance-label">Баланс</div>
+                        <div class="balance-amount" id="balance">2,540.50 ₽</div>
+                    </div>
+                </div>
+                <button class="btn-deposit" onclick="window.location.href='payment.html'">
+                    <i class="fas fa-plus"></i>
+                    Пополнить
+                </button>
+            </div>
+        </nav>
+
+        <div class="main-content">
+            <!-- Сайдбар -->
+            <aside class="sidebar fade-in delay-1">
+                <div class="nav-section">
+                    <h3 class="nav-title">Основные игры</h3>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="crash.html" class="nav-link active">
+                                <span class="nav-icon">🚀</span>
+                                <span>Crash</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <span class="nav-icon">🎯</span>
+                                <span>Pinko</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <span class="nav-icon">⛏️</span>
+                                <span>Miner</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <span class="nav-icon">🍪</span>
+                                <span>Cookies</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="nav-section">
+                    <h3 class="nav-title">Классика</h3>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <span class="nav-icon">🎲</span>
+                                <span>Keno</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <span class="nav-icon">🪙</span>
+                                <span>Coinflip</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <span class="nav-icon">🥜</span>
+                                <span>Nuts</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <span class="nav-icon">🎰</span>
+                                <span>Slots</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="nav-section">
+                    <h3 class="nav-title">Акции</h3>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <span class="nav-icon">🎁</span>
+                                <span>Бонусы</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <span class="nav-icon">👥</span>
+                                <span>Партнерка</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <span class="nav-icon">🏆</span>
+                                <span>Турниры</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="nav-section">
+                    <h3 class="nav-title">Поддержка</h3>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <span class="nav-icon">❓</span>
+                                <span>Помощь</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <span class="nav-icon">💬</span>
+                                <span>Чат</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <span class="nav-icon">⚙️</span>
+                                <span>Настройки</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </aside>
+
+            <!-- Основной контент -->
+            <main class="main-content-area">
+                <!-- Live игры -->
+                <section class="live-section fade-in delay-2">
+                    <div class="section-header">
+                        <h2 class="section-title">Сейчас в игре</h2>
+                        <div class="live-badge">
+                            <div class="live-pulse"></div>
+                            <span>LIVE</span>
+                        </div>
+                    </div>
+                    <div class="live-games">
+                        <div class="live-game">
+                            <div class="game-header">
+                                <div class="game-icon">🚀</div>
+                                <div class="game-tag">Crash</div>
+                            </div>
+                            <div class="live-multiplier">x2.45</div>
+                            <div class="game-stats">
+                                <span>Игроков: 47</span>
+                                <span>Ставок: 12,540 ₽</span>
+                            </div>
+                        </div>
+                        <div class="live-game">
+                            <div class="game-header">
+                                <div class="game-icon">🎯</div>
+                                <div class="game-tag">Pinko</div>
+                            </div>
+                            <div class="live-multiplier">x5.12</div>
+                            <div class="game-stats">
+                                <span>Игроков: 28</span>
+                                <span>Ставок: 8,320 ₽</span>
+                            </div>
+                        </div>
+                        <div class="live-game">
+                            <div class="game-header">
+                                <div class="game-icon">🎲</div>
+                                <div class="game-tag">Keno</div>
+                            </div>
+                            <div class="live-multiplier">x12.8</div>
+                            <div class="game-stats">
+                                <span>Игроков: 15</span>
+                                <span>Ставок: 5,150 ₽</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Игровая сетка -->
+                <section class="games-section fade-in delay-3">
+                    <h2 class="section-title" style="margin-bottom: 24px;">Популярные игры</h2>
+                    <div class="games-grid">
+                        <!-- Crash -->
+                        <div class="game-card" onclick="window.location.href='crash.html'">
+                            <div class="game-header">
+                                <div class="game-icon">🚀</div>
+                                <div class="game-tag">Высокий риск</div>
+                            </div>
+                            <h3 class="game-title">Crash</h3>
+                            <p class="game-description">Следите за ростом множителя и выводите средства до краша</p>
+                            <div class="game-stats">
+                                <span>RTP: 97%</span>
+                                <span>Онлайн: 2,4K</span>
+                            </div>
+                        </div>
+
+                        <!-- Pinko -->
+                        <div class="game-card">
+                            <div class="game-header">
+                                <div class="game-icon">🎯</div>
+                                <div class="game-tag">Средний риск</div>
+                            </div>
+                            <h3 class="game-title">Pinko</h3>
+                            <p class="game-description">Падающие шары на поле с множителями</p>
+                            <div class="game-stats">
+                                <span>RTP: 96%</span>
+                                <span>Онлайн: 1,8K</span>
+                            </div>
+                        </div>
+
+                        <!-- Miner -->
+                        <div class="game-card">
+                            <div class="game-header">
+                                <div class="game-icon">⛏️</div>
+                                <div class="game-tag">Низкий риск</div>
+                            </div>
+                            <h3 class="game-title">Miner</h3>
+                            <p class="game-description">Добывайте криптовалюту и избегайте бомб</p>
+                            <div class="game-stats">
+                                <span>RTP: 98%</span>
+                                <span>Онлайн: 3,2K</span>
+                            </div>
+                        </div>
+
+                        <!-- Keno -->
+                        <div class="game-card">
+                            <div class="game-header">
+                                <div class="game-icon">🎲</div>
+                                <div class="game-tag">Лотерея</div>
+                            </div>
+                            <h3 class="game-title">Keno</h3>
+                            <p class="game-description">Выбирайте числа и выигрывайте до x1000</p>
+                            <div class="game-stats">
+                                <span>RTP: 95%</span>
+                                <span>Онлайн: 890</span>
+                            </div>
+                        </div>
+
+                        <!-- Coinflip -->
+                        <div class="game-card">
+                            <div class="game-header">
+                                <div class="game-icon">🪙</div>
+                                <div class="game-tag">50/50</div>
+                            </div>
+                            <h3 class="game-title">Coinflip</h3>
+                            <p class="game-description">Простая игра на удачу - орёл или решка</p>
+                            <div class="game-stats">
+                                <span>RTP: 99%</span>
+                                <span>Онлайн: 1,5K</span>
+                            </div>
+                        </div>
+
+                        <!-- Slots -->
+                        <div class="game-card">
+                            <div class="game-header">
+                                <div class="game-icon">🎰</div>
+                                <div class="game-tag">Классика</div>
+                            </div>
+                            <h3 class="game-title">Slots</h3>
+                            <p class="game-description">Традиционные слоты с джекпотом</p>
+                            <div class="game-stats">
+                                <span>RTP: 96%</span>
+                                <span>Онлайн: 2,1K</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Нижняя панель для мобильных -->
+    <nav class="bottom-bar">
+        <a href="index.html" class="bottom-nav-item active">
+            <i class="fas fa-home"></i>
+            <span>Главная</span>
+        </a>
+        <a href="crash.html" class="bottom-nav-item">
+            <i class="fas fa-rocket"></i>
+            <span>Игры</span>
+        </a>
+        <a href="#" class="bottom-nav-item">
+            <i class="fas fa-wallet"></i>
+            <span>Кошелек</span>
+        </a>
+        <a href="#" class="bottom-nav-item">
+            <i class="fas fa-user"></i>
+            <span>Профиль</span>
+        </a>
+    </nav>
+
+    <script>
+        // Инициализация Telegram WebApp
+        const tg = window.Telegram?.WebApp;
+        if (tg) {
+            tg.expand();
+            tg.enableClosingConfirmation();
+            
+            // Установка цвета темы
+            tg.setHeaderColor('#0F172A');
+            tg.setBackgroundColor('#0F172A');
+        }
+
+        // Анимации при загрузке
         document.addEventListener('DOMContentLoaded', () => {
-            loadBalance();
+            // Симуляция живых обновлений
+            setInterval(() => {
+                const multipliers = document.querySelectorAll('.live-multiplier');
+                multipliers.forEach(el => {
+                    const current = parseFloat(el.textContent.replace('x', ''));
+                    const change = (Math.random() - 0.5) * 0.1;
+                    const newValue = Math.max(1.1, current + change);
+                    el.textContent = 'x' + newValue.toFixed(2);
+                });
+            }, 2000);
+            
+            // Обновление баланса каждые 5 секунд (для демо)
+            setInterval(() => {
+                const balanceEl = document.getElementById('balance');
+                const current = parseFloat(balanceEl.textContent.replace(/[^\d.]/g, ''));
+                const change = Math.random() > 0.5 ? 10 : -5;
+                const newBalance = Math.max(0, current + change);
+                balanceEl.textContent = newBalance.toLocaleString('ru-RU', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }) + ' ₽';
+            }, 5000);
         });
     </script>
 </body>
